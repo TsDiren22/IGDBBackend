@@ -6,7 +6,7 @@ const GameSchema = new Schema({
   title: {
     type: String,
     validate: {
-      validator: (title) => title.length > 3,
+      validator: (title) => title.length >= 3,
       message: "Title must be longer than 3 characters.",
     },
     required: [true, "Title is required."],
