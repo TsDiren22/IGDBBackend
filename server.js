@@ -43,10 +43,10 @@ app.all("*", (req, res, next) => {
   next();
 });
 
-app.use("/api/games", gameRoutes);
-app.use("/api/studios", studioRoutes);
-app.use("/api/consoles", consoleRoutes);
-app.use("/api", authRoutes);
+app.use("api/games", gameRoutes);
+app.use("api/studios", studioRoutes);
+app.use("api/consoles", consoleRoutes);
+app.use("api", authRoutes);
 
 // Catch all endpoint
 app.all("*", (req, res, next) => {
