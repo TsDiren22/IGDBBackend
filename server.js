@@ -1,4 +1,5 @@
-const mongoose = require("mongoose");
+require("dotenv").config();
+const connect = require("./connect");
 
 const express = require("express");
 const port = process.env.PORT || 3000;
@@ -9,15 +10,6 @@ const consoleRoutes = require("./Routes/consoleRoute");
 const authRoutes = require("./Routes/authRoute");
 
 const app = express();
-
-// Setting up default mongoose connection
-var mongoDB =
-  "mongodb+srv://TsDiren21:hevat100111@cluster0.pybc8.mongodb.net/IGDB?retryWrites=true&w=majority";
-mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
-
-const db = mongoose.connection;
-
-db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
 const logger = require("tracer").console();
 app.use(express.json());
@@ -67,5 +59,8 @@ app.use("*", (error, req, res, next) => {
 app.listen(port, () => {
   logger.log(`Example app listening at http://localhost:${port}`);
 });
+
+connect.mongo(process.env.MONGO_PROD_DB);
+connect.neo(process.env.NEO4J_PROD_DB);
 
 module.exports = app;
