@@ -40,30 +40,44 @@ module.exports = {
         });
     },
 
-    update: (req, res, next) => {
+    update: async (req, res, next) => {
         logger.log("Update console was called");
         // Do something with mongoose
         const consoleId = req.params._id;
         const console = req.body;
-        Console.findByIdAndUpdate(consoleId, console)
-        .then((updated) => {
-            res.status(200).json(updated);
-          })
-          .catch((err) => {
+        
+        try {
+            const oldConsole = await Console.findById(consoleId);
+            if (userId.toString() == oldConsole.user.toString()) {
+              await Console.findByIdAndUpdate(consoleId, console);
+              res.status(200).json(console);
+            } else{
+              next({message: "Only the one who created the console can also update it.", errorCode: 401})
+            }
+          } catch (err) {
             next({ message: err.message, errorCode: 500 });
-          });
+          }
     },
 
-    delete: (req, res, next) => {
+    delete: async (req, res, next) => {
         logger.log("Delete console was called");
 
         const consoleId = req.params._id;
-        Console.findByIdAndDelete(consoleId)
-        .then((deleted) => { 
-            res.status(200).json(deleted);
-        })
-        .catch((err) => {
-            next({message: err.message, errorCode: 500});
-        });
+        const userId = req.id;
+
+        try {
+            const console = await Console.findById(consoleId);
+            if (userId.toString() == console.user.toString()) {
+                await Console.findByIdAndDelete(consoleId);
+                res.status(200).json(console);
+            } else {
+                next({
+                    message: "Only the one who created the console can also delete it.",
+                    errorCode: 401,
+                });
+            }
+        } catch (err) {
+            next({ message: err.message, errorCode: 500 });
+        }
     },
 };

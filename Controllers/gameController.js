@@ -58,7 +58,7 @@ module.exports = {
         await Game.findByIdAndUpdate(gameId, newgame);
         res.status(200).json(newgame);
       } else{
-        next({message: "Only the one who c reated the game can also update it.",errorCode: 401})
+        next({message: "Only the one who created the game can also update it.", errorCode: 401})
       }
     } catch (err) {
       next({ message: err.message, errorCode: 500 });

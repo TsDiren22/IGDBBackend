@@ -6,6 +6,7 @@ module.exports = {
     create: (req, res, next) => {
         logger.log("create studio was called");
         // Do something with mongoose
+        
         const studio = new Studio(req.body);
         const userId = req.id;
         studio.user = userId;
@@ -41,30 +42,46 @@ module.exports = {
         });
     },
 
-    update: (req, res, next) => {
+    update: async (req, res, next) => {
         logger.log("Update studio was called");
         // Do something with mongoose
         const studioId = req.params._id;
         const studio = req.body;
-        Studio.findByIdAndUpdate(studioId, studio)
-        .then((updated) => {
-            res.status(200).json(updated);
-          })
-          .catch((err) => {
+        const userId = req.id;
+
+        try {
+            logger.log(studioId);
+            const oldStudio = await Studio.findById(studioId);
+            if (userId.toString() == oldStudio.user.toString()) {
+              await Studio.findByIdAndUpdate(studioId, studio);
+              res.status(200).json(studio);
+            } else{
+              next({message: "Only the one who created the studio can also update it.", errorCode: 401})
+            }
+          } catch (err) {
             next({ message: err.message, errorCode: 500 });
-          });
+          }
     },
 
-    delete: (req, res, next) => {
+    delete: async (req, res, next) => {
+
         logger.log("Delete studio was called");
-
         const studioId = req.params._id;
-        Studio.findByIdAndDelete(studioId)
-        .then((deleted) => { 
-            res.status(200).json(deleted);
-        })
-        .catch((err) => {
-            next({message: err.message, errorCode: 500});
-        });
-    },
+        const userId = req.id;
+
+        try {
+            const studio = await Studio.findById(studioId);
+            if (userId.toString() == studio.user.toString()) {
+                await Studio.findByIdAndDelete(studioId);
+                res.status(200).json(studio);
+            } else {
+                next({
+                message: "Only the one who created the studio can also delete it.",
+                errorCode: 401,
+                });
+            }
+        } catch (err) {
+            next({ message: err.message, errorCode: 500 });
+        }
+    }
 };
