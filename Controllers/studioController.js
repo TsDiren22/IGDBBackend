@@ -7,6 +7,8 @@ module.exports = {
         logger.log("create studio was called");
         // Do something with mongoose
         const studio = new Studio(req.body);
+        const userId = req.id;
+        studio.user = userId;
         studio.save()
           .then(() => {
             res.status(200).json(studio);
