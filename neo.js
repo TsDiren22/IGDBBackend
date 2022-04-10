@@ -20,5 +20,8 @@ module.exports = {
   session,
   dropAll: "MATCH (n) DETACH DELETE n",
   makeFriends:
-    "MATCH (user:User {id: $userId}) WITH u MATCH (user2:User {id: $otherUserId}) MERGE (u)-[:FRIENDS_WITH]->(u2)",
+    "MATCH (user:User {id: $userId}) WITH user MATCH (friend:User {id: $friendId}) MERGE (user)-[:FRIENDS]->(friend)",
+  register: "MERGE (user:User { id:$userId, email:$email })",
+  getAllFriends:
+  "MATCH (user:User {id: $userId})<-[:FRIENDS]->(friends:User) RETURN friends",
 };

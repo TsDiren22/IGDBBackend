@@ -9,6 +9,7 @@ module.exports = {
     // Do something with mongoose
     const game = new Game(req.body);
     game.user = req.id;
+    logger.log("akjdjdadnjawnwkjwefwjefbejfnaklwndjwkdncklasncjkancajwklncawkljnwkjdnwqklmdnkwqlnwqkl "+ req.id);
     game
       .save()
       .then(() => {

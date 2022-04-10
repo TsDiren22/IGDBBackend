@@ -10,8 +10,14 @@ const options = {
 
 async function mongo(dbName) {
   try {
-    await mongoose.connect(`${process.env.MONGO_URL}/${dbName}`, options);
-    console.log(`connection to mongo DB ${dbName} established`);
+    if(process.env.DOTENV.trim() === 'dev'){
+      await mongoose.connect(`${process.env.MONGO_URL}/${dbName}`, options);
+      console.log(`connection to mongo DB ${dbName} established`);
+    } else {
+      await mongoose.connect(`${process.env.MONGO_TEST}/${dbName}`, options);
+      console.log(`connection to mongo DB ${dbName} test established`);
+    }
+    
   } catch (err) {
     console.error(err);
   }

@@ -8,6 +8,8 @@ module.exports = {
         logger.log("create console was called");
         // Do something with mongoose
         const console = new Console(req.body);
+        const userId = req.id;
+        console.user = userId;
         console.save()
           .then(() => {
             res.status(200).json(console);
@@ -45,6 +47,7 @@ module.exports = {
         // Do something with mongoose
         const consoleId = req.params._id;
         const console = req.body;
+        const userId = req.id;
         
         try {
             const oldConsole = await Console.findById(consoleId);

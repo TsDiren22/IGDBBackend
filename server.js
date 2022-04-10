@@ -8,6 +8,7 @@ const gameRoutes = require("./Routes/gameRoute");
 const studioRoutes = require("./Routes/studioRoute");
 const consoleRoutes = require("./Routes/consoleRoute");
 const authRoutes = require("./Routes/authRoute");
+const friendRoute = require("./Routes/friendRoute");
 
 const app = express();
 
@@ -38,6 +39,7 @@ app.all("*", (req, res, next) => {
 app.use("/api/games", gameRoutes);
 app.use("/api/studios", studioRoutes);
 app.use("/api/consoles", consoleRoutes);
+app.use("/api/friends", friendRoute);
 app.use("/api", authRoutes);
 
 // Catch all endpoint

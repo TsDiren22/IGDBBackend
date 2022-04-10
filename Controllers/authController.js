@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../Schema/users");
+const neo = require("../neo");
 const jwtSecretKey = "secret";
 
 async function login(req, res, next) {
@@ -47,6 +48,12 @@ async function register(req, res) {
       id: created._id,
     };
 
+    const session = neo.session();
+    await session.run(neo.register, {
+      userId: created._id.toString(),
+      email: created.email,
+    });
+
     res.status(200).json({
       message: "user added",
       user: created,
@@ -89,25 +96,9 @@ async function validateToken(req, res, next) {
   }
 }
 
-async function SignToken(req, res) {
-  let payload = {
-    ID: req.id,
-  };
-  // Create an object containing the data we want in the payload.
-  // Userinfo returned to the caller.
-  const userinfo = {
-    token: jwt.sign(payload, "secret", {
-      expiresIn: "2h",
-    }),
-    id: req.id,
-    email: req.email,
-  };
-  res.status(200).json(userinfo);
-}
 
 module.exports = {
   login,
   register,
   validateToken,
-  SignToken,
 };
