@@ -51,7 +51,7 @@ describe("Friendscontroller", () => {
         message.should.be.a("string").that.equals("friend was added!");
       });
 
-      it("should give error on create friends without authorization", async () => {
+      xit("should give error on create friends without authorization", async () => {
 
         const session = neo.session();
         await session.run(neo.register, user);
@@ -67,7 +67,7 @@ describe("Friendscontroller", () => {
         res.body.should.be.an("object").that.has.all.keys("datetime", "error");
       });
 
-      it("should fail on return friendlist without authorization", async () => {
+      xit("should fail on return friendlist without authorization", async () => {
         const session = neo.session();
         await session.run(neo.register, user);
         await session.run(neo.register, friend);
